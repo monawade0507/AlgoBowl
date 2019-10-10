@@ -7,19 +7,19 @@ class subset:
 
 
 def findCover(base, arr):
-	uniq = []
-	uni = []
-	inc = 0
+	uniq = [] #array that can be union
+	uni = []  #array has been unionized w/ base
 	if len(base.itemSet) == rangeOfVal:
-		print("COVER:", base.itemSet)
+		# print("COVER:", base.itemSet)
 		return base
-
+	remain = rangeOfVal
 	# Search through arr to find all potential subsets
 	for i in arr:
 		# print("compare: ", i.itemSet)
 		if base.itemSet.isdisjoint(i.itemSet) == True:
 			# Unique array
 			uniq.append(i)
+			remain = remain - len(i.itemSet)
 			# print("uniq: ", len(uniq))
 			addedSub = subset(base.weight + i.weight,
 							base.itemSet.union(i.itemSet),
@@ -27,25 +27,30 @@ def findCover(base, arr):
 							str(base.setNum) + " " + str(i.setNum))
 			# Union array
 			uni.append(addedSub)
-			# print("added:", addedSub.itemSet)
+			print("added:", addedSub.itemSet)
 			if addedSub.size == rangeOfVal:
-				print("COVER:", addedSub.itemSet)
+				# print("COVER:", addedSub.itemSet)
 				return addedSub
-			findCover(addedSub, uniq)
+	print()
+	for j in uni:
+		# print(j.setNum)
+		if remain == len(base.itemSet):
+			findCover(j, uniq)
 	# print("_____________________________NONE_______________________________")		 
 	return
 
 
 
-fileName="Input_attempt4.txt"
+# fileName="./inputs/input_group115.txt"
+fileName="Input_attempt3.txt"
 f=open(fileName, "r")
 
 rangeOfVal=int(f.readline())  # n
 numOfSub=int(f.readline())  # m
 num=0
-minWeight=1001
+minWeight=500001
 minCover=[]
-subsetList=set()
+subsetList=[]
 # Loop to read through file and set up the data structures
 # to hold all the values
 while True:
@@ -65,21 +70,34 @@ while True:
 				arrItems.remove("\n")
 		arrItems.sort()
 		s=subset(weight, set(arrItems), len(arrItems), num)
-		subsetList.add(s)
+		subsetList.append(s)
 	num += 1
 
-print("---------------------------------------------")
-for s in subsetList:
-	print(s.itemSet)
-print("---------------------------------------------")
+# print("---------------------------------------------")
+# for s in subsetList:
+# 	print(s.itemSet)
+# print("---------------------------------------------")
 
-covers=[]
+covers = []
+inc = 1
 for base in subsetList:
-	print()
-	print("base:", base.itemSet)
-	o = findCover(base, subsetList)
-	if (o != None):
-		print(o.setNum)
+	# print()
+	print("base:", base.setNum)
+	o = findCover(base, subsetList[inc:len(subsetList)])
+	if o != None:
+		print("here!")
+		covers.append(o)
+		# print(o.setNum)
+	inc += 1
+for w in covers:
+	if w.weight < minWeight:
+		minWeight = w.weight
+		# if type(s.setNum) == int: continue
+		# else: minCover = (s.setNum).split(" ").sort()
+		minCover = w.setNum
+
+print(minWeight)
+print(minCover)
 
 
 # for cov in covers:
