@@ -12,6 +12,10 @@ using namespace std;
 set<string> covers;
 void findDec(int numSets);
 void findInc(int numSets, int end);
+template<typename Out>
+void split(const std::string &s, char delim, Out result);
+vector<string> split(const string &s, char delim);
+
 
 int main(int argc, char const *argv[]) {
   /*
@@ -225,10 +229,12 @@ int main(int argc, char const *argv[]) {
   cout << "Weight total: " << minWeight << endl;
   myfile << minWeight << endl;
   cout << "Cover string: ";
-  for (int i = 0; i < bestCover.size(); i++) {
-    if (bestCover.at(i) != ' ') {
+  //seperate string between
+  vector<string> x = split(bestCover, ' ');
+  for (int i = 0; i < x.size(); i++) {
+    if (x.at(i) != " ") {
       string t = "";
-      t += bestCover.at(i);
+      t += x.at(i);
       stringstream toInt(t);
       int subSetNum = 0;
       toInt >> subSetNum;
@@ -274,4 +280,19 @@ void findInc (int numSets, int end) {
     }
     findInc(numSets + 1, end);
   }
+}
+
+template<typename Out>
+void split(const string &s, char delim, Out result) {
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+
+vector<string> split(const string &s, char delim) {
+    vector<string> elems;
+    split(s, delim, back_inserter(elems));
+    return elems;
 }
